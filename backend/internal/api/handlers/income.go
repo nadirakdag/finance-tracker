@@ -44,7 +44,7 @@ func (h *IncomeHandler) Create(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, income)
 }
 
-func (h *IncomeHandler) List(w http.ResponseWriter, r *http.Request) {
+func (h *IncomeHandler) List(w http.ResponseWriter) {
 	incomes, err := h.service.GetIncomes()
 	if err != nil {
 		h.logger.Error("Failed to get incomes", "error", err)

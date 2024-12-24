@@ -44,7 +44,7 @@ func (h *ExpenseHandler) Create(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, expense)
 }
 
-func (h *ExpenseHandler) List(w http.ResponseWriter, r *http.Request) {
+func (h *ExpenseHandler) List(w http.ResponseWriter) {
 	expenses, err := h.service.GetExpenses()
 	if err != nil {
 		h.logger.Error("Failed to get expenses", "error", err)

@@ -8,7 +8,6 @@ var (
 	ErrInvalidDate      = errors.New("invalid date")
 	ErrInvalidCategory  = errors.New("invalid category")
 	ErrNotFound         = errors.New("resource not found")
-	ErrInvalidID        = errors.New("invalid id")
 )
 
 type ErrorResponse struct {

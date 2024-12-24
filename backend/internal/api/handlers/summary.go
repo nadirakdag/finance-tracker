@@ -18,7 +18,7 @@ func NewSummaryHandler(service *services.SummaryService, logger *logger.Logger) 
 	}
 }
 
-func (h *SummaryHandler) Get(w http.ResponseWriter, r *http.Request) {
+func (h *SummaryHandler) Get(w http.ResponseWriter) {
 	summary, err := h.service.GetSummary()
 	if err != nil {
 		h.logger.Error("Failed to get summary", "error", err)
