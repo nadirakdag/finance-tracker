@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  host: "0.0.0.0"
+
+cors:
+  allowed_origins:
+    - "*"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "OPTIONS"
+  allowed_headers:
+    - "Accept"
+    - "Content-Type"
+    - "Content-Length"
+    - "Accept-Encoding"
+    - "Authorization"
+
+logging:
+  level: "DEBUG"
+  format: "json"
+
+metrics:
+  enabled: true
+  path: "/metrics"
