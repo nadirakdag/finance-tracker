@@ -30,6 +30,9 @@ func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger)
 	expenseHandler := handlers.NewExpenseHandler(expenseService, logger)
 	incomeHandler := handlers.NewIncomeHandler(incomeService, logger)
 	summaryHandler := handlers.NewSummaryHandler(summaryService, logger)
+	healthHandler := handlers.NewHealthHandler(logger)
+
+	router.HandleFunc("/health", healthHandler.Check).Methods(http.MethodGet)
 
 	// API Routes
 	api := router.PathPrefix("/api/v1").Subrouter()
