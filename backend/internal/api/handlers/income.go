@@ -24,27 +24,33 @@ func (h *IncomeHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var income models.Income
 	if err := json.NewDecoder(r.Body).Decode(&income); err != nil {
 		h.logger.Error("Failed to decode income", "error", err)
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeError(w, err)
+		return
+	}
+
+	// Validate income
+	if err := income.Validate(); err != nil {
+		h.logger.Warn("Invalid income data", "error", err)
+		writeError(w, err)
 		return
 	}
 
 	if err := h.service.CreateIncome(&income); err != nil {
 		h.logger.Error("Failed to create income", "error", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		writeError(w, err)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(income)
+	writeJSON(w, http.StatusCreated, income)
 }
 
 func (h *IncomeHandler) List(w http.ResponseWriter, r *http.Request) {
 	incomes, err := h.service.GetIncomes()
 	if err != nil {
 		h.logger.Error("Failed to get incomes", "error", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		writeError(w, err)
 		return
 	}
 
-	json.NewEncoder(w).Encode(incomes)
+	writeJSON(w, http.StatusOK, incomes)
 }

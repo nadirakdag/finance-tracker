@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/nadirakdag/finance-tracker/internal/domain/services"
 	"github.com/nadirakdag/finance-tracker/pkg/logger"
 	"net/http"
@@ -23,9 +22,9 @@ func (h *SummaryHandler) Get(w http.ResponseWriter, r *http.Request) {
 	summary, err := h.service.GetSummary()
 	if err != nil {
 		h.logger.Error("Failed to get summary", "error", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		writeError(w, err)
 		return
 	}
 
-	json.NewEncoder(w).Encode(summary)
+	writeJSON(w, http.StatusOK, summary)
 }

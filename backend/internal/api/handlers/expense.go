@@ -24,27 +24,33 @@ func (h *ExpenseHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var expense models.Expense
 	if err := json.NewDecoder(r.Body).Decode(&expense); err != nil {
 		h.logger.Error("Failed to decode expense", "error", err)
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeError(w, err)
+		return
+	}
+
+	// Validate expense
+	if err := expense.Validate(); err != nil {
+		h.logger.Warn("Invalid expense data", "error", err)
+		writeError(w, err)
 		return
 	}
 
 	if err := h.service.CreateExpense(&expense); err != nil {
 		h.logger.Error("Failed to create expense", "error", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		writeError(w, err)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(expense)
+	writeJSON(w, http.StatusCreated, expense)
 }
 
 func (h *ExpenseHandler) List(w http.ResponseWriter, r *http.Request) {
 	expenses, err := h.service.GetExpenses()
 	if err != nil {
 		h.logger.Error("Failed to get expenses", "error", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		writeError(w, err)
 		return
 	}
 
-	json.NewEncoder(w).Encode(expenses)
+	writeJSON(w, http.StatusOK, expenses)
 }
