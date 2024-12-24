@@ -19,14 +19,14 @@ func main() {
 		log.Fatal("Failed to load configuration:", err)
 	}
 
-	// Initialize logger
-	logger := logger.NewLogger(&cfg.Logging)
+	// Initialize appLog
+	appLog := logger.NewLogger(&cfg.Logging)
 
 	// Initialize storage
 	store := memory.NewStore()
 
 	// Initialize router with all dependencies
-	router := api.NewRouter(cfg, store, logger)
+	router := api.NewRouter(cfg, store, appLog)
 
 	// Add prometheus metrics endpoint if enabled
 	if cfg.Metrics.Enabled {
@@ -35,9 +35,9 @@ func main() {
 
 	// Start server
 	serverAddr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
-	logger.Info("Starting server", "address", serverAddr)
+	appLog.Info("Starting server", "address", serverAddr)
 
 	if err := http.ListenAndServe(serverAddr, router); err != nil {
-		logger.Fatal("Server failed to start", "error", err)
+		appLog.Fatal("Server failed to start", "error", err)
 	}
 }
