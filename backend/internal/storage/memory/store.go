@@ -2,6 +2,7 @@ package memory
 
 import (
 	"github.com/nadirakdag/finance-tracker/internal/domain/models"
+	"github.com/nadirakdag/finance-tracker/pkg/utils"
 	"sync"
 )
 
@@ -21,6 +22,12 @@ func NewStore() *memoryStore {
 func (s *memoryStore) CreateExpense(expense *models.Expense) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
+
+	// Generate ID if not provided
+	if expense.ID == "" {
+		expense.ID = utils.GenerateID(16) // 16 characters long
+	}
+
 	s.expenses = append(s.expenses, *expense)
 	return nil
 }
@@ -36,6 +43,12 @@ func (s *memoryStore) GetExpenses() ([]models.Expense, error) {
 func (s *memoryStore) CreateIncome(income *models.Income) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
+
+	// Generate ID if not provided
+	if income.ID == "" {
+		income.ID = utils.GenerateID(16) // 16 characters long
+	}
+
 	s.incomes = append(s.incomes, *income)
 	return nil
 }
