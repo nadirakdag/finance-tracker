@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/nadirakdag/finance-tracker/internal/config"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -17,7 +18,7 @@ type Router struct {
 	store  storage.Storage
 }
 
-func NewRouter(store storage.Storage, logger *logger.Logger) *mux.Router {
+func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger) *mux.Router {
 	router := mux.NewRouter()
 
 	// Initialize services
@@ -44,8 +45,8 @@ func NewRouter(store storage.Storage, logger *logger.Logger) *mux.Router {
 	// Summary endpoint
 	api.HandleFunc("/summary", summaryHandler.Get).Methods(http.MethodGet)
 
-	// Add middleware
-	router.Use(middleware.Cors)
+	// Add middleware with configuration
+	router.Use(middleware.Cors(&cfg.Cors))
 	router.Use(middleware.Logging(logger))
 
 	return router
