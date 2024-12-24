@@ -8,6 +8,10 @@ import (
 // GenerateID creates a random ID string of specified length
 func GenerateID(length int) string {
 	bytes := make([]byte, length/2)
-	rand.Read(bytes)
+
+	if _, err := rand.Read(bytes); err != nil {
+		panic(err)
+	}
+
 	return hex.EncodeToString(bytes)
 }
