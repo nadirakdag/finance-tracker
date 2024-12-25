@@ -1,8 +1,9 @@
 package api
 
 import (
-	"github.com/nadirakdag/finance-tracker/internal/config"
 	"net/http"
+
+	"github.com/nadirakdag/finance-tracker/internal/config"
 
 	"github.com/gorilla/mux"
 	"github.com/nadirakdag/finance-tracker/internal/api/handlers"
@@ -38,11 +39,11 @@ func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger)
 	api := router.PathPrefix("/api/v1").Subrouter()
 
 	// Expenses endpoints
-	api.HandleFunc("/expenses", expenseHandler.Create).Methods(http.MethodPost)
+	api.HandleFunc("/expenses", expenseHandler.Create).Methods(http.MethodPost, http.MethodOptions)
 	api.HandleFunc("/expenses", expenseHandler.List).Methods(http.MethodGet)
 
 	// Incomes endpoints
-	api.HandleFunc("/incomes", incomeHandler.Create).Methods(http.MethodPost)
+	api.HandleFunc("/incomes", incomeHandler.Create).Methods(http.MethodPost, http.MethodOptions)
 	api.HandleFunc("/incomes", incomeHandler.List).Methods(http.MethodGet)
 
 	// Summary endpoint
