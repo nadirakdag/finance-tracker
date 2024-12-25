@@ -31,16 +31,16 @@
                 {{ month }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-green-600">
-                ${{ data.income.toFixed(2) }}
+                ₺{{ data.income.toFixed(2) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600">
-                ${{ data.expenses.toFixed(2) }}
+                ₺{{ data.expenses.toFixed(2) }}
               </td>
               <td 
                 class="px-6 py-4 whitespace-nowrap text-sm text-right"
                 :class="data.balance >= 0 ? 'text-green-600' : 'text-red-600'"
               >
-                ${{ data.balance.toFixed(2) }}
+                ₺{{ data.balance.toFixed(2) }}
               </td>
             </tr>
           </tbody>
