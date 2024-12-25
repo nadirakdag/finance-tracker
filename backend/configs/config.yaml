@@ -16,7 +16,6 @@ cors:
     - "Content-Type"
     - "Content-Length"
     - "Accept-Encoding"
-    - "Authorization"
 
 logging:
   level: "DEBUG"
