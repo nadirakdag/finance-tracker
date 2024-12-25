@@ -66,6 +66,7 @@ func findConfigFile() string {
 		"configs/config.yaml",
 		"config.yaml",
 		"../configs/config.yaml",
+		"../../configs/config.yaml",
 	}
 
 	for _, loc := range locations {
