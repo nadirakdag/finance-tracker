@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import { ApiService } from '@/services/api';
-import type { Summary, TransactionType } from '@/types/transaction';
+import type { Expense, Income, Summary, TransactionType } from '@/types/transaction';
 
 interface FinanceState {
   summary: Summary | null;
+  incomes:  Income[] | [];
+  expenses: Expense[] | [];
   loading: boolean;
   error: string | null;
 }
@@ -11,6 +13,8 @@ interface FinanceState {
 export const useFinanceStore = defineStore('finance', {
   state: (): FinanceState => ({
     summary: null,
+    incomes: [],
+    expenses: [],
     loading: false,
     error: null
   }),
@@ -20,8 +24,10 @@ export const useFinanceStore = defineStore('finance', {
       this.loading = true;
       this.error = null;
       try {
-        const { summary } = await ApiService.fetchAllData();
+        const { expenses, incomes, summary } = await ApiService.fetchAllData();
         this.summary = summary;
+        this.incomes = incomes;
+        this.expenses = expenses
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'An error occurred';
       } finally {

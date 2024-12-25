@@ -10,22 +10,24 @@
       <div v-else class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Amount
-              </th>
+            <tr class="border-b">
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="[category, amount] in sortedCategories" :key="category">
+            <tr v-for="item in sortedCategories" 
+                :key="item.category + item.type" 
+                class="border-b">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {{ formatCategory(category) }}
+                {{ formatCategory(item.category) }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600">
-                ${{ amount.toFixed(2) }}
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="item.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                {{ item.type.charAt(0).toUpperCase() + item.type.slice(1) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="item.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                ₺{{ item.amount.toFixed(2) }}
               </td>
             </tr>
           </tbody>
@@ -38,16 +40,32 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import type { Expense, Income } from '@/types/transaction';
 
 const props = defineProps<{
-  categoryTotals?: Record<string, number>;
+  incomes: Income[];
+  expenses: Expense[];
   loading?: boolean;
 }>();
 
 const sortedCategories = computed(() => {
-  if (!props.categoryTotals) return [];
-  return Object.entries(props.categoryTotals)
-    .sort((a, b) => b[1] - a[1]);
+  const allCategories = [];
+  
+    // Add income categories
+    if (props.incomes) {
+      Object.entries(props.incomes).forEach(([_, income]) => {
+        allCategories.push({ category: income.source, type: 'income', amount: income.amount });
+      });
+    }
+    
+    // Add expense categories
+    if (props.expenses) {
+      Object.entries(props.expenses).forEach(([_, expense]) => {
+        allCategories.push({ category: expense.category, type: 'expense', amount: expense.amount });
+      });
+    }
+
+  return allCategories.sort((a, b) => b.amount - a.amount);
 });
 
 const formatCategory = (category: string) => {

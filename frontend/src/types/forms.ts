@@ -2,6 +2,7 @@ export interface TransactionFormData {
     amount: string;
     description: string;
     category: string;
+    source: string;
     date: string;
   }
   

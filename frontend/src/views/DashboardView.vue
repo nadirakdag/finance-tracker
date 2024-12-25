@@ -32,7 +32,8 @@
             />
 
             <CategoryBreakdown 
-              :category-totals="summary?.categoryTotals"
+              :incomes="incomes"
+              :expenses="expenses"
               :loading="loading"
             />
           </div>
@@ -53,7 +54,7 @@ import MonthlyOverview from '@/components/dashboard/MonthlyOverview.vue';
 import CategoryBreakdown from '@/components/dashboard/CategoryBreakdown.vue';
 
 const store = useFinanceStore();
-const { summary, loading, error } = storeToRefs(store);
+const { summary, incomes, expenses, loading, error } = storeToRefs(store);
 
 onMounted(() => {
   store.fetchData();

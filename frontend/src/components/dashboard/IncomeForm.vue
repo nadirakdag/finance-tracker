@@ -142,6 +142,7 @@ const form = ref({
   amount: '',
   description: '',
   source: '',
+  category: '',
   date: new Date().toISOString().split('T')[0]
 });
 
@@ -153,6 +154,19 @@ const isValid = computed(() => {
     form.value.date
   );
 });
+
+
+const initialFormState = {
+  amount: '',
+  description: '',
+  source: '',
+  category: '',
+  date: new Date().toISOString().split('T')[0]
+};
+
+const resetForm = () => {
+  form.value = { ...initialFormState };
+};
 
 const handleSubmit = () => {
   if (!isValid.value) return;
@@ -168,6 +182,7 @@ const handleSubmit = () => {
 
   form.value = {
     amount: '',
+    category: '',
     description: '',
     source: '',
     date: new Date().toISOString().split('T')[0]

@@ -1,19 +1,17 @@
+export interface Transaction {
+  id: string;
+  amount: number;
+  description: string;
+  date: string;
+}
 
-  export interface Expense  {
-    id: string;
-    amount: number;
-    description: string;
-    date: string;
-    category: string;
-  }
-  
-  export interface Income  {
-    id: string;
-    amount: number;
-    description: string;
-    date: string;
-    source: string;
-  }
+export interface Expense extends Transaction {
+  category: string;
+}
+
+export interface Income extends Transaction {
+  source: string;
+}
   
   export interface MonthData {
     income: number;
@@ -25,7 +23,6 @@
     totalIncome: number;
     totalExpenses: number;
     remainingAmount: number;
-    categoryTotals: Record<string, number>;
     monthlyBreakdown: Record<string, MonthData>;
   }
   
