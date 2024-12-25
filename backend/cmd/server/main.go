@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/nadirakdag/finance-tracker/internal/config"
 	"log"
 	"net/http"
 
+	"github.com/nadirakdag/finance-tracker/internal/config"
+
 	"github.com/nadirakdag/finance-tracker/internal/api"
-	"github.com/nadirakdag/finance-tracker/internal/storage/memory"
+	"github.com/nadirakdag/finance-tracker/internal/storage/sqlite"
 	"github.com/nadirakdag/finance-tracker/pkg/logger"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -23,7 +24,11 @@ func main() {
 	appLog := logger.NewLogger(&cfg.Logging)
 
 	// Initialize storage
-	store := memory.NewStore()
+	store, err := sqlite.NewStore("./finance.db")
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+	defer store.Close()
 
 	// Initialize router with all dependencies
 	router := api.NewRouter(cfg, store, appLog)

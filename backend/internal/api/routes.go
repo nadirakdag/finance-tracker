@@ -13,12 +13,6 @@ import (
 	"github.com/nadirakdag/finance-tracker/pkg/logger"
 )
 
-type Router struct {
-	router *mux.Router
-	logger *logger.Logger
-	store  storage.Storage
-}
-
 func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger) *mux.Router {
 	router := mux.NewRouter()
 

@@ -1,16 +1,17 @@
 package models
 
 import (
-	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
 	"time"
+
+	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
 )
 
 var validIncomeSources = map[string]bool{
-	"salary":    true,
-	"freelance": true,
-	"dividend":  true,
-	"gift":      true,
-	"other":     true,
+	"salary":     true,
+	"freelance":  true,
+	"investment": true,
+	"businees":   true,
+	"other":      true,
 }
 
 type Income struct {
