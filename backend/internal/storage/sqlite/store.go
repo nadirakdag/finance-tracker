@@ -46,7 +46,25 @@ func initializeTables(db *sql.DB) error {
         date DATE NOT NULL
     )`
 
-	queries := []string{expenseTable, incomeTable}
+	categoryTable := `CREATE TABLE IF NOT EXISTS categories (
+    	id TEXT PRIMARY KEY,
+    	name TEXT NOT NULL,
+    	type TEXT NOT NULL CHECK (type IN ('income', 'expense'))
+	)`
+
+	categoryTableData := `INSERT OR IGNORE INTO categories (id, name, type) VALUES
+		('salary', 'Salary', 'income'),
+		('other_income', 'Other', 'income'),
+		('food', 'Food & Dining', 'expense'),
+		('transport', 'Transportation', 'expense'),
+		('utilities', 'Utilities', 'expense'),
+		('entertainment', 'Entertainment', 'expense'),
+		('health', 'Healthcare', 'expense'),
+		('vacation', 'Vacation', 'expense'),
+		('other_expense', 'Other', 'expense');
+	`
+
+	queries := []string{expenseTable, incomeTable, categoryTable, categoryTableData}
 
 	for _, query := range queries {
 		if _, err := db.Exec(query); err != nil {
@@ -135,6 +153,27 @@ func (s *SQLiteStore) GetIncomes() ([]models.Income, error) {
 	}
 
 	return incomes, nil
+}
+
+func (s *SQLiteStore) GetCategories(categoryType string) ([]models.Category, error) {
+	query := `SELECT id, name, type FROM categories WHERE type = ?`
+
+	rows, err := s.db.Query(query, categoryType)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var categories []models.Category
+	for rows.Next() {
+		var category models.Category
+		if err := rows.Scan(&category.ID, &category.Name, &category.Type); err != nil {
+			return nil, err
+		}
+		categories = append(categories, category)
+	}
+
+	return categories, nil
 }
 
 func (s *SQLiteStore) Close() error {

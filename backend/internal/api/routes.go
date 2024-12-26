@@ -20,12 +20,14 @@ func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger)
 	expenseService := services.NewExpenseService(store, logger)
 	incomeService := services.NewIncomeService(store, logger)
 	summaryService := services.NewSummaryService(store, logger)
+	categoryService := services.NewCategoryService(store, logger)
 
 	// Initialize handlers
 	expenseHandler := handlers.NewExpenseHandler(expenseService, logger)
 	incomeHandler := handlers.NewIncomeHandler(incomeService, logger)
 	summaryHandler := handlers.NewSummaryHandler(summaryService, logger)
 	healthHandler := handlers.NewHealthHandler(logger)
+	categoryHandler := handlers.NewCategoryHandler(categoryService, logger)
 
 	router.HandleFunc("/health", healthHandler.Check).Methods(http.MethodGet)
 
@@ -42,6 +44,9 @@ func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger)
 
 	// Summary endpoint
 	api.HandleFunc("/summary", summaryHandler.Get).Methods(http.MethodGet)
+
+	//Category endpoint
+	api.HandleFunc("/categories/{type}", categoryHandler.GetCategories).Methods(http.MethodGet)
 
 	// Add middleware with configuration
 	router.Use(middleware.Cors(&cfg.Cors))
