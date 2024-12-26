@@ -41,6 +41,7 @@
 import { computed } from 'vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 import type { Expense, Income } from '@/types/transaction';
+import type { CategoryListData } from '@/types/forms'
 
 const props = defineProps<{
   incomes: Income[];
@@ -49,7 +50,7 @@ const props = defineProps<{
 }>();
 
 const sortedCategories = computed(() => {
-  const allCategories = [];
+  const allCategories : CategoryListData[] = [];
   
     // Add income categories
     if (props.incomes) {
