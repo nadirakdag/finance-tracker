@@ -5,6 +5,7 @@ import "errors"
 var (
 	ErrInvalidAmount    = errors.New("amount must be greater than 0")
 	ErrEmptyDescription = errors.New("description cannot be empty")
+	ErrEmptyCategory    = errors.New("category cannot be empty")
 	ErrInvalidDate      = errors.New("invalid date")
 	ErrInvalidCategory  = errors.New("invalid category")
 	ErrNotFound         = errors.New("resource not found")

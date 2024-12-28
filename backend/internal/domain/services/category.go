@@ -20,3 +20,7 @@ func NewCategoryService(store storage.Storage, logger *logger.Logger) *CategoryS
 func (s *CategoryService) GetCategories(cType string) ([]models.Category, error) {
 	return s.store.GetCategories(cType)
 }
+
+func (s *CategoryService) CheckCategory(c string, cType string) error {
+	return s.store.CheckCategory(c, cType)
+}

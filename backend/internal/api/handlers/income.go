@@ -2,21 +2,25 @@ package handlers
 
 import (
 	"encoding/json"
+	"net/http"
+
+	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
 	"github.com/nadirakdag/finance-tracker/internal/domain/models"
 	"github.com/nadirakdag/finance-tracker/internal/domain/services"
 	"github.com/nadirakdag/finance-tracker/pkg/logger"
-	"net/http"
 )
 
 type IncomeHandler struct {
-	service *services.IncomeService
-	logger  *logger.Logger
+	service         *services.IncomeService
+	categoryService *services.CategoryService
+	logger          *logger.Logger
 }
 
-func NewIncomeHandler(service *services.IncomeService, logger *logger.Logger) *IncomeHandler {
+func NewIncomeHandler(service *services.IncomeService, categoryService *services.CategoryService, logger *logger.Logger) *IncomeHandler {
 	return &IncomeHandler{
-		service: service,
-		logger:  logger,
+		service:         service,
+		categoryService: categoryService,
+		logger:          logger,
 	}
 }
 
@@ -32,6 +36,13 @@ func (h *IncomeHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if err := income.Validate(); err != nil {
 		h.logger.Warn("Invalid income data", "error", err)
 		writeError(w, err)
+		return
+	}
+
+	//validate expense category
+	if err := h.categoryService.CheckCategory(income.Source, "income"); err != nil {
+		h.logger.Warn("Invalid expense data", "error", err)
+		writeError(w, errors.ErrInvalidCategory)
 		return
 	}
 

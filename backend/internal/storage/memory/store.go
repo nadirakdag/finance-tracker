@@ -1,15 +1,17 @@
 package memory
 
 import (
+	"sync"
+
 	"github.com/nadirakdag/finance-tracker/internal/domain/models"
 	"github.com/nadirakdag/finance-tracker/pkg/utils"
-	"sync"
 )
 
 type memoryStore struct {
-	expenses []models.Expense
-	incomes  []models.Income
-	mutex    sync.RWMutex
+	expenses   []models.Expense
+	incomes    []models.Income
+	categories []models.Category
+	mutex      sync.RWMutex
 }
 
 func NewStore() *memoryStore {
@@ -59,4 +61,18 @@ func (s *memoryStore) GetIncomes() ([]models.Income, error) {
 	incomes := make([]models.Income, len(s.incomes))
 	copy(incomes, s.incomes)
 	return incomes, nil
+}
+
+func (s *memoryStore) GetCategories(categoryType string) ([]models.Category, error) {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+	categories := make([]models.Category, len(s.categories))
+	copy(categories, s.categories)
+	return categories, nil
+}
+func (s *memoryStore) CheckCategory(category string, categoryType string) error {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+
+	return nil
 }

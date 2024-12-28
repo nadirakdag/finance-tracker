@@ -1,19 +1,10 @@
 package models
 
 import (
-	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
 	"time"
-)
 
-var validExpenseCategories = map[string]bool{
-	"food":          true,
-	"transport":     true,
-	"utilities":     true,
-	"entertainment": true,
-	"health":        true,
-	"education":     true,
-	"other":         true,
-}
+	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
+)
 
 type Expense struct {
 	ID          string    `json:"id"`
@@ -33,7 +24,7 @@ func (e *Expense) Validate() error {
 	if e.Date.IsZero() || e.Date.After(time.Now()) {
 		return errors.ErrInvalidDate
 	}
-	if !validExpenseCategories[e.Category] {
+	if e.Category == "" {
 		return errors.ErrInvalidCategory
 	}
 	return nil

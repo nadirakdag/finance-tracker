@@ -10,4 +10,5 @@ type Storage interface {
 	CreateIncome(*models.Income) error
 	GetIncomes() ([]models.Income, error)
 	GetCategories(string) ([]models.Category, error)
+	CheckCategory(string, string) error
 }

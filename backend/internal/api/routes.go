@@ -23,8 +23,8 @@ func NewRouter(cfg *config.Config, store storage.Storage, logger *logger.Logger)
 	categoryService := services.NewCategoryService(store, logger)
 
 	// Initialize handlers
-	expenseHandler := handlers.NewExpenseHandler(expenseService, logger)
-	incomeHandler := handlers.NewIncomeHandler(incomeService, logger)
+	expenseHandler := handlers.NewExpenseHandler(expenseService, categoryService, logger)
+	incomeHandler := handlers.NewIncomeHandler(incomeService, categoryService, logger)
 	summaryHandler := handlers.NewSummaryHandler(summaryService, logger)
 	healthHandler := handlers.NewHealthHandler(logger)
 	categoryHandler := handlers.NewCategoryHandler(categoryService, logger)

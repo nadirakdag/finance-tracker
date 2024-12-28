@@ -2,21 +2,25 @@ package handlers
 
 import (
 	"encoding/json"
+	"net/http"
+
+	"github.com/nadirakdag/finance-tracker/internal/domain/errors"
 	"github.com/nadirakdag/finance-tracker/internal/domain/models"
 	"github.com/nadirakdag/finance-tracker/internal/domain/services"
 	"github.com/nadirakdag/finance-tracker/pkg/logger"
-	"net/http"
 )
 
 type ExpenseHandler struct {
-	service *services.ExpenseService
-	logger  *logger.Logger
+	service         *services.ExpenseService
+	categoryService *services.CategoryService
+	logger          *logger.Logger
 }
 
-func NewExpenseHandler(service *services.ExpenseService, logger *logger.Logger) *ExpenseHandler {
+func NewExpenseHandler(service *services.ExpenseService, categoryService *services.CategoryService, logger *logger.Logger) *ExpenseHandler {
 	return &ExpenseHandler{
-		service: service,
-		logger:  logger,
+		service:         service,
+		categoryService: categoryService,
+		logger:          logger,
 	}
 }
 
@@ -32,6 +36,13 @@ func (h *ExpenseHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if err := expense.Validate(); err != nil {
 		h.logger.Warn("Invalid expense data", "error", err)
 		writeError(w, err)
+		return
+	}
+
+	//validate expense category
+	if err := h.categoryService.CheckCategory(expense.Category, "expense"); err != nil {
+		h.logger.Warn("Invalid expense data", "error", err)
+		writeError(w, errors.ErrInvalidCategory)
 		return
 	}
 

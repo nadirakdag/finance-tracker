@@ -176,6 +176,23 @@ func (s *SQLiteStore) GetCategories(categoryType string) ([]models.Category, err
 	return categories, nil
 }
 
+func (s *SQLiteStore) CheckCategory(c string, cType string) error {
+	query := `SELECT id, name, type FROM categories WHERE type = ? and id = ?`
+
+	rows, err := s.db.Query(query, cType, c)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	var category models.Category
+	for rows.Next() {
+		err = rows.Scan(&category.ID, &category.Name, &category.Type)
+	}
+
+	return err
+}
+
 func (s *SQLiteStore) Close() error {
 	return s.db.Close()
 }
