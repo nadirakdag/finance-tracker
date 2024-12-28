@@ -11,24 +11,55 @@ REST API for personal finance tracking built with Go and SQLite.
 
 ## Project Structure
 ```
-backend/
-├── cmd/
-│   └── server/
-│       └── main.go              # Application entry point
-├── internal/
-│   ├── api/
-│   │   ├── handlers/           # HTTP handlers
-│   │   ├── middleware/         # Middleware components
-│   │   └── routes.go          # Route definitions
-│   ├── domain/
-│   │   ├── models/            # Data models
-│   │   └── services/          # Business logic
-│   └── storage/
-│       └── sqlite/            # SQLite implementation
-├── pkg/
-│   ├── logger/
-│   └── validation/
-└── configs/
+.
+├── Dockerfile
+├── README.md
+├── cmd
+│   └── server
+│       └── main.go
+├── configs
+│   └── config.yaml
+├── go.mod
+├── go.sum
+├── internal
+│   ├── api
+│   │   ├── handlers
+│   │   │   ├── category.go
+│   │   │   ├── expense.go
+│   │   │   ├── health.go
+│   │   │   ├── income.go
+│   │   │   ├── summary.go
+│   │   │   └── utils.go
+│   │   ├── middleware
+│   │   │   ├── cors.go
+│   │   │   └── logging.go
+│   │   └── routes.go
+│   ├── config
+│   │   └── config.go
+│   ├── domain
+│   │   ├── errors
+│   │   │   └── errors.go
+│   │   ├── models
+│   │   │   ├── category.go
+│   │   │   ├── expense.go
+│   │   │   ├── income.go
+│   │   │   └── summary.go
+│   │   └── services
+│   │       ├── category.go
+│   │       ├── expense.go
+│   │       ├── income.go
+│   │       └── summary.go
+│   └── storage
+│       ├── memory
+│       │   └── store.go
+│       ├── sqlite
+│       │   └── store.go
+│       └── storage.go
+└── pkg
+    ├── logger
+    │   └── logger.go
+    └── utils
+        └── id.go
 ```
 
 ## Setup
