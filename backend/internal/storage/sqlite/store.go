@@ -63,6 +63,7 @@ func initializeTables(db *sql.DB) error {
 		('vacation', 'Vacation', 'expense'),
 		('tech', 'Tech', 'expense'),
 		('subscription', 'Subscription', 'expense'),
+		('shopping', 'Shopping', 'expense'),
 		('other_expense', 'Other', 'expense');
 	`
 
