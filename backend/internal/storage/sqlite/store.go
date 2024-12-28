@@ -61,6 +61,8 @@ func initializeTables(db *sql.DB) error {
 		('entertainment', 'Entertainment', 'expense'),
 		('health', 'Healthcare', 'expense'),
 		('vacation', 'Vacation', 'expense'),
+		('tech', 'Tech', 'expense'),
+		('subscription', 'Subscription', 'expense'),
 		('other_expense', 'Other', 'expense');
 	`
 
