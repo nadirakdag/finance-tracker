@@ -27,3 +27,9 @@ export interface Income extends Transaction {
   }
   
   export type TransactionType = 'income' | 'expense';
+
+  export interface Category {
+    id: string;
+    name: string;
+    type: string;
+  }

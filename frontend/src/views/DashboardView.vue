@@ -22,6 +22,8 @@
 
           <TransactionForm 
             :loading="loading"
+            :income-categories="incomeCategories"
+            :expense-categories="expenseCategories"
             @submit="handleTransactionSubmit"
           />
 
@@ -54,7 +56,7 @@ import MonthlyOverview from '@/components/dashboard/MonthlyOverview.vue';
 import CategoryBreakdown from '@/components/dashboard/CategoryBreakdown.vue';
 
 const store = useFinanceStore();
-const { summary, incomes, expenses, loading, error } = storeToRefs(store);
+const { summary, incomes, expenses, loading, error, incomeCategories, expenseCategories } = storeToRefs(store);
 
 onMounted(() => {
   store.fetchData();

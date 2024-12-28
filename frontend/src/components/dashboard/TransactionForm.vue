@@ -31,6 +31,7 @@
         <component
           :is="activeTab === 'income' ? IncomeForm : ExpenseForm"
           :loading="loading"
+          :categories="activeTab === 'income' ? incomeCategories : expenseCategories"
           @submit="data => handleSubmit(activeTab as TransactionType, data)"
         />
       </div>
@@ -41,13 +42,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ArrowDownCircle, ArrowUpCircle } from 'lucide-vue-next';
-import type { TransactionType } from '@/types/transaction';
+import type { Category, TransactionType } from '@/types/transaction';
 import type { TransactionFormData } from '@/types/forms';
 import IncomeForm from './IncomeForm.vue';
 import ExpenseForm from './ExpenseForm.vue';
 
 const props = defineProps<{
   loading?: boolean;
+  incomeCategories?: Category[];
+  expenseCategories?: Category[];
 }>();
 
 const emit = defineEmits<{

@@ -59,8 +59,8 @@
               :disabled="loading"
             >
               <option value="" disabled>Select category</option>
-              <option v-for="category in categories" :key="category.value" :value="category.value">
-                {{ category.label }}
+              <option v-for="category in categories" :key="category.id" :value="category.id">
+                {{ category.name }}
               </option>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
@@ -121,25 +121,17 @@
 import { ref, computed } from 'vue';
 import type { TransactionFormData } from '@/types/forms';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import type { Category } from '@/types/transaction';
 
 const props = defineProps<{
   loading?: boolean;
+  categories?: Category[];
 }>();
 
 const emit = defineEmits<{
   (e: 'submit', data: TransactionFormData): void;
 }>();
 
-const categories = [
-  { value: 'food', label: 'Food' },
-  { value: 'transport', label: 'Transport' },
-  { value: 'utilities', label: 'Utilities' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'health', label: 'Health' },
-  { value: 'education', label: 'Education' },
-  { value: 'shopping', label: 'Shopping' },
-  { value: 'other', label: 'Other' }
-];
 
 const form = ref({
   amount: '',

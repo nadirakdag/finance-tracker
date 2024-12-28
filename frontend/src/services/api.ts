@@ -1,4 +1,4 @@
-import type { Expense, Income, Summary, TransactionType } from '@/types/transaction';
+import type { Category, Expense, Income, Summary, TransactionType } from '@/types/transaction';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -37,12 +37,18 @@ export class ApiService {
   }
 
   static async fetchAllData() {
-    const [expenses, incomes, summary] = await Promise.all([
+    const [expenses, incomes, summary, incomeCategories, expenseCategories] = await Promise.all([
       this.getExpenses(),
       this.getIncomes(),
       this.getSummary(),
+      this.getCategories("income"),
+      this.getCategories("expense")
     ]);
 
-    return { expenses, incomes, summary };
+    return { expenses, incomes, summary, incomeCategories, expenseCategories };
   }
+
+  static async getCategories(type: string): Promise<Category[]>  {
+    return this.fetchWithError( `${API_BASE_URL}/categories/${type}`)
+  };
 }
