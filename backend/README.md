@@ -1,131 +1,146 @@
 # Finance Tracker Backend
 
-A Go-based backend service for tracking personal finances, including income and expenses.
+REST API for personal finance tracking built with Go and SQLite.
 
-## Features
+## Tech Stack
 
-- RESTful API for managing income and expenses
-- In-memory storage with thread-safe operations
-- Prometheus metrics for monitoring
-- Structured logging
-- CORS middleware
-- Configuration management
-- Docker support
+- Go 1.21+
+- SQLite3
+- Gorilla Mux
+- Prometheus metrics
 
 ## Project Structure
-
 ```
-finance-tracker/
+backend/
 ├── cmd/
 │   └── server/
-│       └── main.go                 # Application entry point
+│       └── main.go              # Application entry point
 ├── internal/
 │   ├── api/
-│   │   ├── handlers/
-│   │   │   ├── expense.go         # Expense handler
-│   │   │   ├── income.go          # Income handler
-│   │   │   ├── summary.go         # Summary handler
-│   │   │   └── utils.go           # Handler utilities (error handling, JSON writing)
-│   │   ├── middleware/
-│   │   │   ├── cors.go           # CORS middleware
-│   │   │   ├── logging.go        # Logging middleware
-│   │   │   └── auth.go           # Authentication middleware
-│   │   └── routes.go             # Route definitions
-│   ├── config/
-│   │   └── config.go             # Configuration management
+│   │   ├── handlers/           # HTTP handlers
+│   │   ├── middleware/         # Middleware components
+│   │   └── routes.go          # Route definitions
 │   ├── domain/
-│   │   ├── errors/
-│   │   │   └── errors.go         # Custom error definitions
-│   │   ├── models/
-│   │   │   ├── expense.go        # Expense model
-│   │   │   ├── income.go         # Income model
-│   │   │   ├── summary.go        # Summary model
-│   │   │   └── validation.go     # Model validation
-│   │   └── services/
-│   │       ├── expense.go        # Expense business logic
-│   │       ├── income.go         # Income business logic
-│   │       └── summary.go        # Summary business logic
-│   ├── metrics/
-│   │   └── metrics.go            # Prometheus metrics
+│   │   ├── models/            # Data models
+│   │   └── services/          # Business logic
 │   └── storage/
-│       ├── memory/
-│       │   └── store.go          # In-memory storage implementation
-│       └── storage.go            # Storage interface
+│       └── sqlite/            # SQLite implementation
 ├── pkg/
 │   ├── logger/
-│   │   └── logger.go             # Logger implementation
-│   └── utils/
-│       └── id.go                 # ID generation utility
-├── configs/
-│   └── config.yaml              # Configuration file
-├── .gitignore
-├── Dockerfile
-├── go.mod
-├── go.sum
-└── README.md
+│   └── validation/
+└── configs/
 ```
 
-## Getting Started
+## Setup
 
-### Prerequisites
+1. Install dependencies:
+```bash
+go mod download
+```
 
-- Go 1.21 or later
-- Docker (optional)
-
-### Running Locally
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/finance-tracker.git
-   ```
-
-2. Install dependencies:
-   ```bash
-   go mod download
-   ```
-
-3. Run the server:
-   ```bash
-   go run cmd/server/main.go
-   ```
-
-### Using Docker
-
-1. Build the image:
-   ```bash
-   docker build -t finance-tracker .
-   ```
-
-2. Run the container:
-   ```bash
-   docker run -p 8080:8080 finance-tracker
-   ```
+2. Run server:
+```bash
+go run cmd/server/main.go
+```
 
 ## API Endpoints
 
-- `POST /api/v1/expenses` - Create expense
-- `GET /api/v1/expenses` - List expenses
-- `POST /api/v1/incomes` - Create income
-- `GET /api/v1/incomes` - List incomes
-- `GET /api/v1/summary` - Get financial summary
+### Categories
+```
+GET /api/v1/categories         # Get all categories
+GET /api/v1/categories/income  # Get income sources
+GET /api/v1/categories/expense # Get expense categories
+```
+
+### Transactions
+```
+POST /api/v1/expenses         # Create expense
+GET  /api/v1/expenses         # List expenses
+POST /api/v1/incomes          # Create income
+GET  /api/v1/incomes          # List incomes
+GET  /api/v1/summary          # Get financial summary
+```
+
+## Example Requests
+
+Create Expense:
+```bash
+curl -X POST http://localhost:8080/api/v1/expenses \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 50.99,
+    "category": "food",
+    "description": "Grocery shopping",
+    "date": "2024-02-24T00:00:00Z"
+  }'
+```
+
+Create Income:
+```bash
+curl -X POST http://localhost:8080/api/v1/incomes \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 2500.00,
+    "source": "salary",
+    "description": "Monthly salary",
+    "date": "2024-02-01T00:00:00Z"
+  }'
+```
+
+Get Summary:
+```bash
+curl http://localhost:8080/api/v1/summary
+```
+
+## Database Schema
+
+### Categories Table
+```sql
+CREATE TABLE categories (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('income', 'expense'))
+);
+```
+
+### Expenses Table
+```sql
+CREATE TABLE expenses (
+    id TEXT PRIMARY KEY,
+    amount REAL NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT NOT NULL,
+    date DATE NOT NULL
+);
+```
+
+### Incomes Table
+```sql
+CREATE TABLE incomes (
+    id TEXT PRIMARY KEY,
+    amount REAL NOT NULL,
+    source TEXT NOT NULL,
+    description TEXT NOT NULL,
+    date DATE NOT NULL
+);
+```
 
 ## Metrics
 
-Prometheus metrics are available at `/metrics`
+Prometheus metrics available at `/metrics`:
+- Total number of expenses
+- Total number of incomes
+- Transaction processing duration
+- Active users count
 
-## Configuration
+## Docker
 
-Configuration is managed through `configs/config.yaml`. Key configurations include:
+Build image:
+```bash
+docker build -t finance-tracker-backend .
+```
 
-- Server settings
-- CORS configuration
-- Logging settings
-- Metrics configuration
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+Run container:
+```bash
+docker run -p 8080:8080 finance-tracker-backend
+```
