@@ -39,6 +39,8 @@
               :loading="loading"
             />
           </div>
+
+          <TransactionTable :loading="false" :incomes="incomes" :expenses="expenses" />
         </div>
       </div>
     </main>
@@ -54,6 +56,7 @@ import SummaryCards from '@/components/dashboard/SummaryCards.vue';
 import TransactionForm from '@/components/dashboard/TransactionForm.vue';
 import MonthlyOverview from '@/components/dashboard/MonthlyOverview.vue';
 import CategoryBreakdown from '@/components/dashboard/CategoryBreakdown.vue';
+import TransactionTable from '@/components/dashboard/TransactionTable.vue';
 
 const store = useFinanceStore();
 const { summary, incomes, expenses, loading, error, incomeCategories, expenseCategories } = storeToRefs(store);
