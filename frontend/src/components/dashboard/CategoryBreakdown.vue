@@ -71,4 +71,6 @@ const sortedCategories = computed(() => {
 
 const formatCategory = (category: string) => {
   return category.charAt(0).toUpperCase() + category.slice(1);
-};</script>
+};
+
+</script>
