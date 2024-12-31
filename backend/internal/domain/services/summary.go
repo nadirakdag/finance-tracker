@@ -30,17 +30,24 @@ func (s *SummaryService) GetSummary() (*models.Summary, error) {
 	}
 
 	summary := &models.Summary{
-		MonthlyBreakdown: make(map[string]models.MonthData),
+		MonthlyBreakdown:  make(map[string]models.MonthData),
+		CategoryBreakdown: make(map[string]models.CategoryData),
 	}
 
 	// Calculate totals and breakdowns
 	for _, expense := range expenses {
 		summary.TotalExpenses += expense.Amount
+
 		monthKey := expense.Date.Format("2006-01")
 		monthData := summary.MonthlyBreakdown[monthKey]
 		monthData.Expenses += expense.Amount
 		monthData.Balance -= expense.Amount
 		summary.MonthlyBreakdown[monthKey] = monthData
+
+		categoryData := summary.CategoryBreakdown[expense.Category]
+		categoryData.Amount += expense.Amount
+		categoryData.Type = "expense"
+		summary.CategoryBreakdown[expense.Category] = categoryData
 	}
 
 	for _, income := range incomes {

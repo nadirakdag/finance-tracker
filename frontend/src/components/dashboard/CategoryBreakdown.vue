@@ -17,17 +17,15 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="item in sortedCategories" 
-                :key="item.category + item.type" 
-                class="border-b">
+            <tr v-for="[category, data] in sortedCategories" :key="category" class="border-b">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {{ formatCategory(item.category) }}
+                {{ formatCategory(category) }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="item.type === 'income' ? 'text-green-600' : 'text-red-600'">
-                {{ item.type.charAt(0).toUpperCase() + item.type.slice(1) }}
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="data.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                {{ data.type.charAt(0).toUpperCase() + data.type.slice(1) }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="item.type === 'income' ? 'text-green-600' : 'text-red-600'">
-                ₺{{ item.amount.toFixed(2) }}
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="data.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                ₺{{ data.amount.toFixed(2) }}
               </td>
             </tr>
           </tbody>
@@ -40,33 +38,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
-import type { Expense, Income } from '@/types/transaction';
-import type { CategoryListData } from '@/types/forms'
+import type { CategoryData } from '@/types/transaction';
 
 const props = defineProps<{
-  incomes: Income[];
-  expenses: Expense[];
+  categoryBreakdown?: Record<string, CategoryData>;
   loading?: boolean;
 }>();
 
 const sortedCategories = computed(() => {
-  const allCategories : CategoryListData[] = [];
-  
-    // Add income categories
-    if (props.incomes) {
-      Object.entries(props.incomes).forEach(([_, income]) => {
-        allCategories.push({ category: income.source, type: 'income', amount: income.amount });
-      });
-    }
-    
-    // Add expense categories
-    if (props.expenses) {
-      Object.entries(props.expenses).forEach(([_, expense]) => {
-        allCategories.push({ category: expense.category, type: 'expense', amount: expense.amount });
-      });
-    }
-
-  return allCategories.sort((a, b) => b.amount - a.amount);
+  if (!props.categoryBreakdown) return [];
+  return  Object.entries(props.categoryBreakdown)
+  .sort((a, b) => b[0].localeCompare(a[0]));
 });
 
 const formatCategory = (category: string) => {

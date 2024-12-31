@@ -18,12 +18,18 @@ export interface Income extends Transaction {
     expenses: number;
     balance: number;
   }
+
+  export interface CategoryData {
+    amount: number;
+    type: string;
+  }
   
   export interface Summary {
     totalIncome: number;
     totalExpenses: number;
     remainingAmount: number;
     monthlyBreakdown: Record<string, MonthData>;
+    categoryBreakdown: Record<string, CategoryData>;
   }
   
   export type TransactionType = 'income' | 'expense';
