@@ -20,7 +20,7 @@
         <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="item in sortedCategories" :key="item.category + item.type" class="border-b">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {{ item.category }}
+                {{ formatCategory(item.category) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600" :class="item.type === 'income' ? 'text-green-600' : 'text-red-600'">
                 {{ item.type.charAt(0).toUpperCase() + item.type.slice(1) }}
@@ -94,6 +94,10 @@ const sortedCategories = computed(() => {
 
   return allCategories.sort((a, b) => b.date - a.date);
 });
+
+const formatCategory = (category: string) => {
+  return category.charAt(0).toUpperCase() + category.slice(1);
+};
 
 
 </script>
