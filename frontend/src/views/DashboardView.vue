@@ -34,8 +34,7 @@
             />
 
             <CategoryBreakdown 
-              :incomes="incomes"
-              :expenses="expenses"
+              :category-breakdown="summary?.categoryBreakdown"
               :loading="loading"
             />
           </div>

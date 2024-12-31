@@ -10,9 +10,3 @@ export interface TransactionFormData {
     value: string;
     label: string;
   }
-
-  export interface CategoryListData {
-    category: string;
-    type: string;
-    amount: number;
-  }
