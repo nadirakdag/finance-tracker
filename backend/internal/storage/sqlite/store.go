@@ -93,7 +93,7 @@ func (s *SQLiteStore) CreateExpense(expense *models.Expense) error {
 }
 
 func (s *SQLiteStore) GetExpenses() ([]models.Expense, error) {
-	query := `SELECT id, amount, category, description, date FROM expenses`
+	query := `SELECT id, amount, category, description, date FROM expenses ORDER BY date`
 
 	rows, err := s.db.Query(query)
 	if err != nil {
@@ -133,7 +133,7 @@ func (s *SQLiteStore) CreateIncome(income *models.Income) error {
 }
 
 func (s *SQLiteStore) GetIncomes() ([]models.Income, error) {
-	query := `SELECT id, amount, source, description, date FROM incomes`
+	query := `SELECT id, amount, source, description, date FROM incomes ORDER BY date`
 
 	rows, err := s.db.Query(query)
 	if err != nil {
